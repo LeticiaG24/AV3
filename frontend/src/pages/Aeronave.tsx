@@ -64,7 +64,7 @@ export default function Aeronave() {
               </p>
             </div>
             <button
-              className="mt-4 w-full bg-[#4a7ba7] hover:bg-[#3d6b93] active:bg-[#2f5578] text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors duration-200 shadow-sm"
+              className="mt-4 w-full bg-[#4a7ba7] hover:bg-[#3d6b93] active:bg-[#2f5578] text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors duration-200 shadow-sm cursor-pointer"
             >
               Gerar relatório (.txt)
             </button>

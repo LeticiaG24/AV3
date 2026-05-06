@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { EtapaModal } from "../modals/EtapaModal";
+import { CadEtapaModal } from "../modals/CadEtapaModal";
 
 type StatusEtapa = "em_andamento" | "concluida" | "pendente";
 interface Etapa {
@@ -26,15 +27,23 @@ function StatusEtapaBadge({ status }: { status: StatusEtapa }) {
 export default function EtapasTable() {
     const [etapas] = useState<Etapa[]>(etapasIniciais);
     const [open, setOpen] = useState(false);
+    const [openCadastro, setOpenCadastro] = useState(false);
     
     return (
         <div>
         <section className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
         <div className="flex items-center justify-between mb-4">
         <h2 className="text-base font-semibold text-slate-800">Etapas</h2>
-        <button className="bg-[#1e3a5f] hover:bg-[#162d4a] text-white text-xs font-medium px-4 py-1.5 rounded-xl transition-colors">
+        <button onClick={() => setOpenCadastro(true)} className="bg-[#1e3a5f] hover:bg-[#162d4a] text-white text-xs font-medium px-4 py-1.5 rounded-xl transition-colors cursor-pointer">
             Nova etapa
         </button>
+        {<CadEtapaModal isOpen={openCadastro} onClose={() => {}} />}
+        {openCadastro && (
+          <CadEtapaModal
+            isOpen={openCadastro}
+            onClose={() => setOpenCadastro(false)}
+          />
+        )}
         </div>
         <div className="grid grid-cols-4 pb-2 border-b border-slate-200">
             {["Nome", "Prazo", "Status", "Visualizar"].map((col) => (
@@ -56,7 +65,7 @@ export default function EtapasTable() {
               <StatusEtapaBadge status={etapa.status} />
               <button 
               onClick={() => setOpen(true)}
-              className="justify-self-start border border-slate-300 hover:border-slate-400 hover:bg-slate-50 text-slate-700 text-xs font-medium px-4 py-1.5 rounded-lg transition-colors">
+              className="cursor-pointer justify-self-start border border-slate-300 hover:border-slate-400 hover:bg-slate-50 text-slate-700 text-xs font-medium px-4 py-1.5 rounded-lg transition-colors">
                 Ver
               </button>
             </div>

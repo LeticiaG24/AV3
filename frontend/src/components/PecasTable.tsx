@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { CadPecaModal } from "../modals/cadPecaModal";
 
 type StatusPeca = "em_producao" | "em_transporte" | "pronta";
 
@@ -11,8 +12,8 @@ interface Peca {
 }
 
 const pecasIniciais: Peca[] = [
-  { id: 1, nome: "Turbina A1", tipo: "Motor", fornecedor: "GE Aviation", status: "em_producao" },
-  { id: 2, nome: "Flap Esquerdo", tipo: "Superfície", fornecedor: "Embraer Parts", status: "em_transporte" },
+  { id: 1, nome: "Turbina A1", tipo: "Nacional", fornecedor: "GE Aviation", status: "em_producao" },
+  { id: 2, nome: "Flap Esquerdo", tipo: "Importada", fornecedor: "Embraer Parts", status: "em_transporte" },
 ];
 
 function PecaCard({ peca }: { peca: Peca }) {
@@ -26,15 +27,22 @@ function PecaCard({ peca }: { peca: Peca }) {
 }
 
 export default function PecasTable() {
+    const [open, setOpen] = useState(false);
     const [pecas] = useState<Peca[]>(pecasIniciais);
     const pecasPorStatus = (status: StatusPeca) => pecas.filter((p) => p.status === status);
     return (
         <section className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
           <div className="flex items-center justify-between mb-1">
             <h2 className="text-base font-semibold text-slate-800">Peças</h2>
-            <button className="bg-[#1e3a5f] hover:bg-[#162d4a] text-white text-xs font-medium px-4 py-1.5 rounded-xl transition-colors">
+            <button onClick={() => setOpen(true)} className="bg-[#1e3a5f] hover:bg-[#162d4a] text-white text-xs font-medium px-4 py-1.5 rounded-xl transition-colors cursor-pointer">
               Nova peça
             </button>
+            {open && (
+              <CadPecaModal
+                isOpen={open}
+                onClose={() => setOpen(false)}
+              />
+            )}
           </div>
 
           <div className="grid grid-cols-3 gap-4 mt-4">

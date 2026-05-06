@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ResultadoTesteModal } from "../modals/ResultadoTesteModal";
 
 type StatusTeste = "aprovado" | "reprovado" | null;
 interface Teste {
@@ -49,6 +50,7 @@ function TesteStatusIcon({ status }: { status: StatusTeste }) {
 
 export default function Testes() {
   const [testes] = useState<Teste[]>(testesIniciais);
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
@@ -57,7 +59,13 @@ export default function Testes() {
         {testes.map((teste) => (
           <div key={teste.id} className="flex items-center justify-between">
             <span className="text-sm text-slate-700">{teste.nome}</span>
+            <button onClick={() => setOpen(true)} className="cursor-pointer">
             <TesteStatusIcon status={teste.status} />
+            </button>
+            <ResultadoTesteModal
+              isOpen={open}
+              onClose={() => setOpen(false)}
+            />
           </div>
         ))}
       </div>
