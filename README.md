@@ -10,8 +10,10 @@ npm run dev
 Login:
 http://localhost:5173/
 
-Administrador:
-http://localhost:5173/admin
+Usuários:
+Administrador - http://localhost:5173/admin
+Engenheiro - http://localhost:5173/engenheiro
+Operador - http://localhost:5173/operador
 
 Detalhes de uma aeronave:
 http://localhost:5173/aeronave

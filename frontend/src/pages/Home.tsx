@@ -14,10 +14,10 @@ export default function Home(usuario: Usuario) {
       {/* Header */}
       <Header />
 
-      <main className="max-w-4xl mx-auto px-6 py-8 space-y-10">
+      <main className="max-w-4xl mx-auto px-6 py-8 space-y-5">
 
         {/* User info + action buttons */}
-        <section className="flex items-center justify-between">
+        <section className="flex items-center justify-between mb-10">
           <div>
             <p className="text-lg font-semibold text-slate-800">{usuario.nome}</p>
             <p className="text-sm text-slate-500 mt-0.5">{usuario.nivel}</p>
