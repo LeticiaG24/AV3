@@ -1,3 +1,5 @@
+import CadFuncionarioBtn from "./CadFuncionarioBtn";
+
 interface Funcionario {
   id: number;
   nome: string;
@@ -26,7 +28,10 @@ const funcionarios: Funcionario[] = [
 export default function FuncionariosTable() {
     return (
         <section>
-          <h2 className="text-xl font-semibold text-slate-800 mb-4">Funcionários</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-slate-800">Funcionários</h2>
+            <CadFuncionarioBtn />
+          </div>
           <div className="bg-[#1e3a5f] rounded-2xl overflow-hidden shadow-md">
             {/* Table header */}
             <div className="grid grid-cols-4 px-6 py-3 border-b border-white/10">

@@ -52,7 +52,7 @@ export function CadEtapaModal({
         {/* Botão fechar */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-full text-gray-400 transition hover:bg-gray-300 hover:text-gray-600"
+          className="absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-full text-gray-400 transition hover:bg-gray-300 hover:text-gray-600 cursor-pointer"
           aria-label="Fechar"
         >
           ✕
@@ -118,7 +118,7 @@ export function CadEtapaModal({
         <div className="mt-6 flex justify-center">
           <button
             onClick={handleSubmit}
-            className="rounded-lg bg-[#3d5a80] px-10 py-2.5 text-sm font-medium text-white shadow-md transition hover:bg-[#2e4669] active:scale-95"
+            className="rounded-lg bg-[#3d5a80] px-10 py-2.5 text-sm font-medium text-white shadow-md transition hover:bg-[#2e4669] active:scale-95 cursor-pointer"
           >
             Cadastrar
           </button>

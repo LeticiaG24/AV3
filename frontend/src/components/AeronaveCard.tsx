@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 export default function AeronaveCard() {
   const navigate = useNavigate();
   return (
-    <div className="group relative bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-300 cursor-pointer overflow-hidden"
+    <div className="group relative bg-[#D3DBE2] border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-300 cursor-pointer overflow-hidden"
       onClick={() => navigate("/aeronave") }
     >
       <div className="flex items-start justify-between mb-3">
@@ -21,10 +21,10 @@ export default function AeronaveCard() {
           { label: "Alcance", value: "5.000 km" },
         ].map(({ label, value }) => (
           <div key={label} className="flex items-baseline gap-1.5">
-            <span className="text-xs text-slate-400 font-medium w-20 flex-shrink-0">
+            <span className="text-xs text-slate-600 font-medium w-20 flex-shrink-0">
               {label}:
             </span>
-            <span className="text-sm text-slate-700">{value}</span>
+            <span className="text-sm text-slate-900">{value}</span>
           </div>
         ))}
       </div>

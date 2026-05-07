@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { CadPecaModal } from "../modals/cadPecaModal";
+import { Pencil } from "lucide-react";
+import { AlterarStatusPecaModal } from "../modals/AlterarStatusPecaModal";
 
 type StatusPeca = "em_producao" | "em_transporte" | "pronta";
 
@@ -17,9 +19,26 @@ const pecasIniciais: Peca[] = [
 ];
 
 function PecaCard({ peca }: { peca: Peca }) {
+  const [open, setOpen] = useState(false);
   return (
     <div className="bg-white border border-slate-200 rounded-xl p-3 text-sm space-y-0.5 shadow-sm">
-      <p className="font-semibold text-slate-800">{peca.nome}</p>
+      <div className="flex items-start justify-between mb-3">
+        <h3 className="font-semibold text-slate-800 text-base leading-tight">
+          {peca.nome}
+        </h3>
+        <button onClick={() => setOpen(true)} className="cursor-pointer">
+          < Pencil size={16}/>
+        </button>
+        <AlterarStatusPecaModal isOpen={open} onClose={() => setOpen(false)} statusAtual={peca.status} onConfirm={(novoStatus) => {
+          console.log(novoStatus);
+        }} />
+        {open && (
+          <AlterarStatusPecaModal
+            isOpen={open}
+            onClose={() => setOpen(false)}
+          />
+        )}
+      </div>
       <p className="text-slate-500">{peca.tipo}</p>
       <p className="text-slate-500">{peca.fornecedor}</p>
     </div>

@@ -1,6 +1,7 @@
 import AeronaveCard from "../components/AeronaveCard";
 import Header from "../components/Header";
 import FuncionariosTable from "../components/FuncionariosTable";
+import CadAeronaveBtn from "../components/CadAeronaveBtn";
 
 type Usuario = {
   nome: string;
@@ -25,7 +26,11 @@ export default function Home(usuario: Usuario) {
 
         {/* Aeronaves */}
         <section className="group relative bg-white border border-slate-200 rounded-2xl p-5 shadow-sm overflow-hidden">
-          <h2 className="text-xl font-semibold text-slate-800 mb-4">Aeronaves</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-slate-800">Aeronaves</h2>
+            {usuario.nivel === "Operador" ? null :
+            <CadAeronaveBtn />}
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <AeronaveCard />
             <AeronaveCard />
@@ -33,7 +38,7 @@ export default function Home(usuario: Usuario) {
         </section>
 
         {/* Funcionários */}
-        {usuario.nivel === "Operador"? null:
+        {usuario.nivel !== "Admin"? null:
         <section className="group relative bg-white border border-slate-200 rounded-2xl p-5 shadow-sm overflow-hidden">
           <FuncionariosTable />
         </section>}
