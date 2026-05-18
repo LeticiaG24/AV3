@@ -2,13 +2,36 @@ import AeronaveCard from "../components/AeronaveCard";
 import Header from "../components/Header";
 import FuncionariosTable from "../components/FuncionariosTable";
 import CadAeronaveBtn from "../components/CadAeronaveBtn";
+import { useEffect, useState } from "react";
 
 type Usuario = {
   nome: string;
   nivel: string;
 }
+type Aeronave = {
+  id: number;
+  codigo: string;
+  modelo: string;
+  tipo: string;
+  capacidade: number;
+  alcance: number;
+};
 
 export default function Home(usuario: Usuario) {
+  const [aeronaves, setAeronaves] = useState<Aeronave[]>([]);
+
+  useEffect(() => {
+    async function fetchAeronaves() {
+      const response = await fetch("http://localhost:3333/aeronaves");
+
+      const data = await response.json();
+
+      setAeronaves(data);
+    }
+
+    fetchAeronaves();
+  }, []);
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
       {/* Header */}
@@ -32,8 +55,12 @@ export default function Home(usuario: Usuario) {
             <CadAeronaveBtn />}
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <AeronaveCard />
-            <AeronaveCard />
+            {aeronaves.map((aeronave) => (
+              <AeronaveCard
+                key={aeronave.id}
+                aeronave={aeronave}
+              />
+            ))}
           </div>
         </section>
 
