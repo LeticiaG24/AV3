@@ -1,0 +1,9 @@
+model Peca {
+    id   Int    @id @default(autoincrement())
+    nome String
+    tipo TipoPeca
+    status StatusPeca
+    fornecedor String
+    aeronave Aeronave @relation(fields: [aeronaveId], references: [id])
+    aeronaveId Int
+}

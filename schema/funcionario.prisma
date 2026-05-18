@@ -1,0 +1,10 @@
+model Funcionario {
+    id   Int    @id @default(autoincrement())
+    nome String
+    telefone String
+    endereco String
+    usuario String @unique
+    senha String
+    nivelPermissao NivelPermissao
+    etapas Etapa[]
+}

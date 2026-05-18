@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Aeronave {
+    id   Int    @id @default(autoincrement())
+    codigo String @unique
+    modelo String
+    tipo TipoAeronave
+    capacidade Int
+    alcance Int
+    pecas Peca[]
+    etapas Etapa[]
+    testes Teste[]
+}
+
+model Etapa {
+    id   Int    @id @default(autoincrement())
+    nome String
+    prazo DateTime
+    status StatusEtapa
+    aeronaveId Int
+    aeronave Aeronave @relation(fields: [aeronaveId], references: [id])
+    funcionarios Funcionario[]
+}
+
+model Funcionario {
+    id   Int    @id @default(autoincrement())
+    nome String
+    telefone String
+    endereco String
+    usuario String @unique
+    senha String
+    nivelPermissao NivelPermissao
+    etapas Etapa[]
+}
+
+model Peca {
+    id   Int    @id @default(autoincrement())
+    nome String
+    tipo TipoPeca
+    status StatusPeca
+    fornecedor String
+    aeronave Aeronave @relation(fields: [aeronaveId], references: [id])
+    aeronaveId Int
+}
+
+model Teste {
+    id   Int    @id @default(autoincrement())
+    tipo TipoTeste
+    resultado ResultadoTeste
+    aeronaveId Int
+    aeronave Aeronave @relation(fields: [aeronaveId], references: [id])
+}
+
+enum NivelPermissao {
+    Admin
+    Engenheiro
+    Operador
+}
+
+enum ResultadoTeste {
+    Aprovado
+    Reprovado
+}
+
+enum StatusEtapa {
+    Pendente
+    Andamento
+    Concluida
+}
+
+enum StatusPeca {
+    EmProducao
+    EmTransporte
+    Pronta
+}
+
+enum TipoAeronave {
+    Comercial
+    Militar
+}
+
+enum TipoPeca {
+    Nacional
+    Importada
+}
+
+enum TipoTeste {
+    Eletrico
+    Hidraulico
+    Aerodinamico
+}
