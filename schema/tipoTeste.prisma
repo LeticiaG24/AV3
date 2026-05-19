@@ -1,5 +1,0 @@
-enum TipoTeste {
-    Eletrico
-    Hidraulico
-    Aerodinamico
-}

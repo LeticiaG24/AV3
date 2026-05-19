@@ -1,4 +1,0 @@
-enum TipoAeronave {
-    Comercial
-    Militar
-}

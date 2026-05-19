@@ -1,5 +1,0 @@
-enum NivelPermissao {
-    Admin
-    Engenheiro
-    Operador
-}

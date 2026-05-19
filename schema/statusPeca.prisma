@@ -1,5 +1,0 @@
-enum StatusPeca {
-    EmProducao
-    EmTransporte
-    Pronta
-}

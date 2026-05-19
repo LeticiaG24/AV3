@@ -7,6 +7,28 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get("/funcionarios", async (req, res) => {
+  const funcionarios = await prisma.funcionario.findMany();
+
+  res.json(funcionarios);
+});
+
+app.post("/funcionarios", async (req, res) => {
+  const { nome, endereco, usuario, senha, telefone, nivelPermissao } = req.body;
+  const funcionario = await prisma.funcionario.create({
+    data: {
+      nome,
+      endereco,
+      usuario,
+      senha,
+      telefone,
+      nivelPermissao,
+    }
+  });
+
+  res.json(funcionario);
+});
+
 app.get("/aeronaves", async (req, res) => {
   const aeronaves = await prisma.aeronave.findMany();
 

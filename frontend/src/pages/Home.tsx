@@ -16,20 +16,36 @@ type Aeronave = {
   capacidade: number;
   alcance: number;
 };
+type Funcionario = {
+  id: number;
+  nome: string
+  telefone: string
+  endereco: string
+  usuario: string
+  senha: string
+  nivelPermissao: string;
+}
 
 export default function Home(usuario: Usuario) {
   const [aeronaves, setAeronaves] = useState<Aeronave[]>([]);
+  const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);
 
   useEffect(() => {
-    async function fetchAeronaves() {
-      const response = await fetch("http://localhost:3333/aeronaves");
+    async function fetchData() {
+      const [aeronavesResponse, funcionariosResponse] =
+      await Promise.all([
+        fetch("http://localhost:3333/aeronaves"),
+        fetch("http://localhost:3333/funcionarios"),
+      ]);
 
-      const data = await response.json();
+      const aeronavesData = await aeronavesResponse.json();
+      const funcionariosData = await funcionariosResponse.json();
 
-      setAeronaves(data);
+      setAeronaves(aeronavesData);
+      setFuncionarios(funcionariosData);
     }
 
-    fetchAeronaves();
+    fetchData();
   }, []);
 
   return (
@@ -65,10 +81,11 @@ export default function Home(usuario: Usuario) {
         </section>
 
         {/* Funcionários */}
-        {usuario.nivel !== "Admin"? null:
-        <section className="group relative bg-white border border-slate-200 rounded-2xl p-5 shadow-sm overflow-hidden">
-          <FuncionariosTable />
-        </section>}
+        {usuario.nivel !== "Admin" ? null : (
+          <section className="group relative bg-white border border-slate-200 rounded-2xl p-5 shadow-sm overflow-hidden">
+            <FuncionariosTable funcionarios={funcionarios} />
+          </section>
+        )}
 
       </main>
     </div>
