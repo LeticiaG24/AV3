@@ -1,9 +1,8 @@
 import { useState } from "react";
 
-type StatusPeca = "em_producao" | "em_transporte" | "pronta" | null;
 
 interface StatusOption {
-  value: StatusPeca;
+  value: string;
   label: string;
   icon: string;
   activeColor: string;
@@ -15,7 +14,7 @@ interface StatusOption {
 
 const STATUS_OPTIONS: StatusOption[] = [
   {
-    value: "em_producao",
+    value: "EmProducao",
     label: "Em Produção",
     icon: "⚙️",
     activeColor: "border-orange-400 bg-orange-50 text-orange-700",
@@ -25,7 +24,7 @@ const STATUS_OPTIONS: StatusOption[] = [
     iconColor: "",
   },
   {
-    value: "em_transporte",
+    value: "EmTransporte",
     label: "Em Transporte",
     icon: "🚚",
     activeColor: "border-blue-400 bg-blue-50 text-blue-700",
@@ -35,7 +34,7 @@ const STATUS_OPTIONS: StatusOption[] = [
     iconColor: "",
   },
   {
-    value: "pronta",
+    value: "Pronta",
     label: "Pronta",
     icon: "✓",
     activeColor: "border-green-400 bg-green-50 text-green-700",
@@ -49,8 +48,8 @@ const STATUS_OPTIONS: StatusOption[] = [
 interface AlterarStatusPecaModalProps {
   isOpen: boolean;
   onClose: () => void;
-  statusAtual?: StatusPeca;
-  onConfirm?: (status: StatusPeca) => void;
+  statusAtual?: string;
+  onConfirm?: (status: string) => void;
 }
 
 export function AlterarStatusPecaModal({

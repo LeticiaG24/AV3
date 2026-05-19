@@ -57,6 +57,11 @@ app.get("/aeronaves/:id", async (req, res) => {
       where: {
         id: Number(id),
       },
+      include: {
+        pecas: true,
+        etapas: true,
+        testes: true,
+      },
     });
 
     res.json(aeronave);
@@ -140,6 +145,9 @@ app.get("/etapas/:id", async (req, res) => {
     const etapa = await prisma.etapa.findUnique({
       where: {
         id: Number(id),
+      },
+      include: {
+        funcionarios: true,
       },
     });
     res.json(etapa);

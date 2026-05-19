@@ -8,6 +8,22 @@ type Usuario = {
   nome: string;
   nivel: string;
 }
+
+type Peca = {
+  id: number;
+  nome: string;
+  tipo: string;
+  status: string;
+  fornecedor: string;
+};
+type Etapa = {
+  id: number;
+  nome: string;
+  prazo: string;
+  status: string;
+
+  funcionarios: Funcionario[];
+};
 type Aeronave = {
   id: number;
   codigo: string;
@@ -15,6 +31,9 @@ type Aeronave = {
   tipo: string;
   capacidade: number;
   alcance: number;
+
+  pecas: Peca[];
+  etapas: Etapa[];
 };
 type Funcionario = {
   id: number;

@@ -2,30 +2,39 @@ import { useState } from "react";
 import { EtapaModal } from "../modals/EtapaModal";
 import { CadEtapaModal } from "../modals/CadEtapaModal";
 
-type StatusEtapa = "em_andamento" | "concluida" | "pendente";
-interface Etapa {
+type Funcionario = {
+  id: number;
+  nome: string
+  telefone: string
+  endereco: string
+  usuario: string
+  senha: string
+  nivelPermissao: string;
+}
+
+type Etapa = {
   id: number;
   nome: string;
   prazo: string;
-  status: StatusEtapa;
+  status: string;
+  funcionarios: Funcionario[];
 }
 
-const etapasIniciais: Etapa[] = [
-  { id: 1, nome: "Etapa inicial", prazo: "12/12/2026", status: "em_andamento" },
-];
+type Props = {
+  etapas: Etapa[];
+}
 
-function StatusEtapaBadge({ status }: { status: StatusEtapa }) {
-  const map: Record<StatusEtapa, { label: string; className: string }> = {
-    em_andamento: { label: "Em andamento", className: "text-amber-700" },
-    concluida: { label: "Concluída", className: "text-emerald-700" },
-    pendente: { label: "Pendente", className: "text-slate-600" },
+function StatusEtapaBadge({ status }: { status: string }) {
+  const map: Record<string, { label: string; className: string }> = {
+    Andamento: { label: "Em andamento", className: "text-amber-700" },
+    Concluida: { label: "Concluída", className: "text-emerald-700" },
+    Pendente: { label: "Pendente", className: "text-slate-600" },
   };
   const { label, className } = map[status];
   return <span className={`text-sm px-2 py-0.5 rounded-md font-medium ${className}`}>{label}</span>;
 }
 
-export default function EtapasTable() {
-    const [etapas] = useState<Etapa[]>(etapasIniciais);
+export default function EtapasTable({ etapas }: Props) {
     const [open, setOpen] = useState(false);
     const [openCadastro, setOpenCadastro] = useState(false);
     

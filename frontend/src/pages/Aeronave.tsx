@@ -5,6 +5,33 @@ import PecasTable from "../components/PecasTable";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+type Peca = {
+  id: number;
+  nome: string;
+  tipo: string;
+  status: string;
+  fornecedor: string;
+};
+
+type Funcionario = {
+  id: number;
+  nome: string
+  telefone: string
+  endereco: string
+  usuario: string
+  senha: string
+  nivelPermissao: string;
+}
+
+type Etapa = {
+  id: number;
+  nome: string;
+  prazo: string;
+  status: string;
+
+  funcionarios: Funcionario[];
+};
+
 type Aeronave = {
   id: number;
   codigo: string;
@@ -12,6 +39,9 @@ type Aeronave = {
   tipo: string;
   capacidade: number;
   alcance: number;
+
+  pecas: Peca[];
+  etapas: Etapa[];
 };
 
 export default function Aeronave() {
@@ -74,10 +104,10 @@ export default function Aeronave() {
         </div>
 
         {/* Peças */}
-        <PecasTable />
+        <PecasTable pecas={aeronave.pecas} />
 
         {/* Etapas */}
-        <EtapasTable />
+        <EtapasTable etapas={aeronave.etapas}/>
       </main>
     </div>
   );
