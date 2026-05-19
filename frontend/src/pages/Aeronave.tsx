@@ -2,28 +2,30 @@ import Header from "../components/Header";
 import Testes from "../components/Testes";
 import EtapasTable from "../components/EtapasTable";
 import PecasTable from "../components/PecasTable";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
-
-interface Aeronave {
-  modelo: string;
+type Aeronave = {
+  id: number;
   codigo: string;
+  modelo: string;
   tipo: string;
-  capacidade: string;
-  alcance: string;
-}
-
-const aeronave: Aeronave = {
-  modelo: "Boeing 737-800",
-  codigo: "BR-001",
-  tipo: "Comercial",
-  capacidade: "162 pas",
-  alcance: "5.765 km",
+  capacidade: number;
+  alcance: number;
 };
 
-
-// ── Main Page ──────────────────────────────────────────────────────────────────
-
 export default function Aeronave() {
+  const { id } = useParams();
+  const [aeronave, setAeronave] = useState<Aeronave | null>(null);
+  useEffect(() => {
+    fetch(`http://localhost:3333/aeronaves/${id}`)
+      .then((res) => res.json())
+      .then((data) => setAeronave(data))
+      .catch((error) => console.error("Erro ao buscar aeronave:", error));
+  }, [id]);
+  if (!aeronave) {
+    return <p>Carregando...</p>;
+  }
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
       <Header />

@@ -35,6 +35,22 @@ app.get("/aeronaves", async (req, res) => {
   res.json(aeronaves);
 });
 
+app.get("/aeronaves/:id", async (req, res) => {
+  try {
+    const {id} = req.params;
+    const aeronave = await prisma.aeronave.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    res.json(aeronave);
+  }
+  catch (error) {
+    res.status(404).json({ error: "Aeronave não encontrada" });
+  }
+});
+
 app.post("/aeronaves", async (req, res) => {
   const aeronave = await prisma.aeronave.create({
     data: req.body,

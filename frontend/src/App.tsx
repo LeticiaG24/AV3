@@ -12,7 +12,7 @@ function App() {
     
       <Routes>
         <Route path="/" element={<Login />}/>
-        <Route path="/aeronave" element={<Aeronave />}/>
+        <Route path="/aeronave/:id" element={<Aeronave />}/>
         <Route path="/admin" element={<Home nome={"Letícia Furtado"} nivel={"Admin"} />}/>
         <Route path="/engenheiro" element={<Home nome={"Isaura de Lourdes"} nivel={"Engenheiro"} />}/>
         <Route path="/operador" element={<Home nome={"Guilherme Rosa"} nivel={"Operador"} />}/>
