@@ -13,6 +13,21 @@ app.get("/funcionarios", async (req, res) => {
   res.json(funcionarios);
 });
 
+app.get("/funcionarios/:id", async (req, res) => {
+  try {
+    const {id} = req.params;
+    const funcionario = await prisma.funcionario.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+    res.json(funcionario);
+  }
+  catch (error) {
+    res.status(404).json({ error: "Funcionário não encontrado" });
+  }
+});
+
 app.post("/funcionarios", async (req, res) => {
   const { nome, endereco, usuario, senha, telefone, nivelPermissao } = req.body;
   const funcionario = await prisma.funcionario.create({
@@ -57,6 +72,88 @@ app.post("/aeronaves", async (req, res) => {
   });
 
   res.json(aeronave);
+});
+
+app.get("/pecas", async (req, res) => {
+  const pecas = await prisma.peca.findMany();
+  res.json(pecas);
+});
+
+app.get("/pecas/:id", async (req, res) => {
+  try {
+    const {id} = req.params;
+    const peca = await prisma.peca.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+    res.json(peca);
+  }
+  catch (error) {
+    res.status(404).json({ error: "Peça não encontrada" });
+  }
+});
+
+app.post("/pecas", async (req, res) => {
+  const peca = await prisma.peca.create({
+    data: req.body,
+  });
+
+  res.json(peca);
+});
+
+app.get("/testes", async (req, res) => {
+  const testes = await prisma.teste.findMany();
+  res.json(testes);
+});
+
+app.get("/testes/:id", async (req, res) => {
+  try {
+    const {id} = req.params;
+    const teste = await prisma.teste.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+    res.json(teste);
+  }
+  catch (error) {
+    res.status(404).json({ error: "Teste não encontrado" });
+  }
+});
+
+app.post("/testes", async (req, res) => {
+  const teste = await prisma.teste.create({
+    data: req.body,
+  });
+  res.json(teste);
+});
+
+app.get("/etapas", async (req, res) => {
+  const etapas = await prisma.etapa.findMany();
+  res.json(etapas);
+});
+
+app.get("/etapas/:id", async (req, res) => {
+  try {
+    const {id} = req.params;
+    const etapa = await prisma.etapa.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+    res.json(etapa);
+  }
+  catch (error) {
+    res.status(404).json({ error: "Etapa não encontrada" });
+  }
+});
+
+app.post("/etapas", async (req, res) => {
+  const etapa = await prisma.etapa.create({
+    data: req.body,
+  });
+  res.json(etapa);
 });
 
 app.listen(3333, () => {
