@@ -99,12 +99,26 @@ app.get("/pecas/:id", async (req, res) => {
   }
 });
 
-app.post("/pecas", async (req, res) => {
-  const peca = await prisma.peca.create({
-    data: req.body,
-  });
+app.put("/pecas/:id", async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
 
-  res.json(peca);
+  try {
+    const pecaAtualizada = await prisma.peca.update({
+      where: {
+        id: Number(id),
+      },
+      data: {
+        status,
+      },
+    });
+
+    res.json(pecaAtualizada);
+  } catch (error) {
+    res.status(500).json({
+      erro: "Erro ao atualizar peça",
+    });
+  }
 });
 
 app.get("/testes", async (req, res) => {

@@ -46,22 +46,38 @@ type Aeronave = {
 
 export default function Aeronave() {
   const { id } = useParams();
+
   const [aeronave, setAeronave] = useState<Aeronave | null>(null);
+  const [pecas, setPecas] = useState<Peca[]>([]);
+
+  async function carregarPecas() {
+    const response = await fetch(`http://localhost:3333/aeronaves/${id}`);
+    const data = await response.json();
+
+    setPecas(data.pecas);
+  }
+
   useEffect(() => {
     fetch(`http://localhost:3333/aeronaves/${id}`)
       .then((res) => res.json())
-      .then((data) => setAeronave(data))
-      .catch((error) => console.error("Erro ao buscar aeronave:", error));
+      .then((data) => {
+        setAeronave(data);
+        setPecas(data.pecas);
+      })
+      .catch((error) =>
+        console.error("Erro ao buscar aeronave:", error)
+      );
   }, [id]);
+
   if (!aeronave) {
     return <p>Carregando...</p>;
   }
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
       <Header />
 
       <main className="max-w-3xl mx-auto px-6 py-6 space-y-6">
-
         {/* Top section: Modelo | Testes | Relatório */}
         <div className="grid grid-cols-3 gap-4">
 
@@ -103,11 +119,14 @@ export default function Aeronave() {
           </div>
         </div>
 
-        {/* Peças */}
-        <PecasTable pecas={aeronave.pecas} />
+        {/* resto da tela */}
 
-        {/* Etapas */}
-        <EtapasTable etapas={aeronave.etapas}/>
+        <PecasTable
+          pecas={pecas}
+          atualizarPecas={carregarPecas}
+        />
+
+        <EtapasTable etapas={aeronave.etapas} />
       </main>
     </div>
   );

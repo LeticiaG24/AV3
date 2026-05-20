@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-
 interface StatusOption {
   value: string;
   label: string;
@@ -45,70 +44,84 @@ const STATUS_OPTIONS: StatusOption[] = [
   },
 ];
 
+type Peca = {
+  id: number;
+  nome: string;
+  tipo: string;
+  fornecedor: string;
+  status: string;
+};
+
 interface AlterarStatusPecaModalProps {
   isOpen: boolean;
   onClose: () => void;
-  statusAtual?: string;
-  onConfirm?: (status: string) => void;
+  peca: Peca;
+  onConfirm?: (novoStatus: string) => void;
 }
 
 export function AlterarStatusPecaModal({
   isOpen,
   onClose,
-  statusAtual = null,
+  peca,
   onConfirm,
 }: AlterarStatusPecaModalProps) {
-  const [selecionado, setSelecionado] = useState<StatusPeca>(statusAtual);
+  
+  const [selecionado, setSelecionado] = useState<string>(peca.status);
 
   if (!isOpen) return null;
 
   const handleConfirm = () => {
     if (!selecionado) return;
+
     onConfirm?.(selecionado);
     onClose();
   };
 
   return (
-    /* Overlay */
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
       onClick={onClose}
     >
-      {/* Modal */}
       <div
         className="relative w-full max-w-sm rounded-2xl bg-[#e8eaed] px-6 py-6 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Botão fechar */}
         <button
           onClick={onClose}
           className="absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-full text-gray-400 transition hover:bg-gray-300 hover:text-gray-600 cursor-pointer"
-          aria-label="Fechar"
         >
           ✕
         </button>
 
-        {/* Título */}
-        <p className="mb-5 text-center text-sm font-medium text-gray-600">
+        <p className="mb-2 text-center text-sm font-medium text-gray-600">
           Alterar status da peça
         </p>
 
-        {/* Opções de status */}
+        <p className="mb-5 text-center text-xs text-gray-500">
+          {peca.nome}
+        </p>
+
         <div className="flex flex-col gap-2.5">
           {STATUS_OPTIONS.map((option) => {
             const isSelected = selecionado === option.value;
+
             return (
               <button
                 key={option.value}
                 onClick={() => setSelecionado(option.value)}
                 className={`flex w-full items-center gap-3 rounded-lg border bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition active:scale-95 cursor-pointer
-                  ${isSelected
-                    ? option.activeColor + " border"
-                    : `border-transparent ${option.hoverBorder} ${option.hoverBg} ${option.hoverText}`
+                  ${
+                    isSelected
+                      ? option.activeColor + " border"
+                      : `border-transparent ${option.hoverBorder} ${option.hoverBg} ${option.hoverText}`
                   }`}
               >
-                <span className={option.iconColor || ""}>{option.icon}</span>
+                <span className={option.iconColor || ""}>
+                  {option.icon}
+                </span>
+
                 {option.label}
+
                 {isSelected && (
                   <span className="ml-auto text-xs opacity-60">✓</span>
                 )}
@@ -117,7 +130,6 @@ export function AlterarStatusPecaModal({
           })}
         </div>
 
-        {/* Botão Confirmar */}
         <div className="mt-5 flex justify-center">
           <button
             onClick={handleConfirm}
