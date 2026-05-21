@@ -58,7 +58,7 @@ model Peca {
 model Teste {
     id   Int    @id @default(autoincrement())
     tipo TipoTeste
-    resultado ResultadoTeste
+    resultado ResultadoTeste?
     aeronaveId Int
     aeronave Aeronave @relation(fields: [aeronaveId], references: [id])
 }

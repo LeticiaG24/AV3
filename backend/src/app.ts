@@ -72,8 +72,30 @@ app.get("/aeronaves/:id", async (req, res) => {
 });
 
 app.post("/aeronaves", async (req, res) => {
+  const { codigo, modelo, tipo, capacidade, alcance } = req.body;
+
   const aeronave = await prisma.aeronave.create({
-    data: req.body,
+    data: {
+      codigo,
+      modelo,
+      tipo,
+      capacidade,
+      alcance,
+      
+      testes: {
+        create: [
+          {
+            tipo: "Aerodinamico",
+          },
+          {
+            tipo: "Eletrico",
+          },
+          {
+            tipo: "Hidraulico",
+          },
+          ]
+      },
+    },
   });
 
   res.json(aeronave);
@@ -145,6 +167,22 @@ app.post("/testes", async (req, res) => {
   const teste = await prisma.teste.create({
     data: req.body,
   });
+  res.json(teste);
+});
+
+app.put("/testes/:id", async (req, res) => {
+  const { id } = req.params;
+  const { resultado } = req.body;
+
+  const teste = await prisma.teste.update({
+    where: {
+      id: Number(id),
+    },
+    data: {
+      resultado,
+    },
+  });
+
   res.json(teste);
 });
 

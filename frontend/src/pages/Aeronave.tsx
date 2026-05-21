@@ -13,23 +13,18 @@ export default function Aeronave() {
   const [aeronave, setAeronave] = useState<Aeronave | null>(null);
   const [pecas, setPecas] = useState<Peca[]>([]);
 
-  async function carregarPecas() {
+  async function carregarAeronave() {
     const response = await fetch(`http://localhost:3333/aeronaves/${id}`);
     const data = await response.json();
 
+    setAeronave(data);
     setPecas(data.pecas);
   }
 
   useEffect(() => {
-    fetch(`http://localhost:3333/aeronaves/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setAeronave(data);
-        setPecas(data.pecas);
-      })
-      .catch((error) =>
-        console.error("Erro ao buscar aeronave:", error)
-      );
+    carregarAeronave().catch((error) =>
+      console.error("Erro ao buscar aeronave:", error)
+    );
   }, [id]);
 
   if (!aeronave) {
@@ -64,7 +59,7 @@ export default function Aeronave() {
             </div>
           </div>
           
-          <Testes />
+          <Testes testes={aeronave.testes} onStatusChange={carregarAeronave}/>
 
           {/* Relatório */}
           <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col justify-between">
@@ -86,7 +81,7 @@ export default function Aeronave() {
 
         <PecasTable
           pecas={pecas}
-          atualizarPecas={carregarPecas}
+          atualizarPecas={carregarAeronave}
         />
 
         <EtapasTable etapas={aeronave.etapas} />
