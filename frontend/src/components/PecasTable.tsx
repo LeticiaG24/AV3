@@ -2,14 +2,8 @@ import { useState } from "react";
 import { CadPecaModal } from "../modals/cadPecaModal";
 import { Pencil } from "lucide-react";
 import { AlterarStatusPecaModal } from "../modals/AlterarStatusPecaModal";
+import type { Peca} from "../types/index";
 
-type Peca = {
-  id: number;
-  nome: string;
-  tipo: string;
-  fornecedor: string;
-  status: string;
-}
 type Props = {
   pecas: Peca[];
   atualizarPecas: () => Promise<void>;

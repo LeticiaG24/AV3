@@ -171,10 +171,38 @@ app.get("/etapas/:id", async (req, res) => {
   }
 });
 
-app.post("/etapas", async (req, res) => {
-  const etapa = await prisma.etapa.create({
-    data: req.body,
+app.post("/etapas/:id/funcionarios", async (req, res) => {
+  const etapaId = Number(req.params.id);
+  const { funcionarioId } = req.body;
+
+  const etapaAtualizada = await prisma.etapa.update({
+    where: { id: etapaId },
+    data: {
+      funcionarios: {
+        connect: {
+          id: funcionarioId,
+        },
+      },
+    },
+    include: {
+      funcionarios: true,
+    },
   });
+
+  res.json(etapaAtualizada);
+});
+
+app.put("/etapas/:id/status", async (req, res) => {
+  const etapaId = Number(req.params.id);
+  const { status } = req.body;
+
+  const etapa = await prisma.etapa.update({
+    where: { id: etapaId },
+    data: {
+      status,
+    },
+  });
+
   res.json(etapa);
 });
 

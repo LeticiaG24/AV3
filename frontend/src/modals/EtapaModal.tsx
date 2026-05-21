@@ -1,23 +1,16 @@
-import { useState } from "react";
-import { AdicionarFuncionarioDropdown, type Funcionario } from "../components/AdicionarFuncionarioDropdown";
+import { useEffect, useState } from "react";
+import { AdicionarFuncionarioDropdown} from "../components/AdicionarFuncionarioDropdown";
+import type { Etapa, StatusEtapa, Funcionario } from "../types";
 
-type StatusEtapa = "em_andamento" | "concluida" | "pendente";
-
-interface Etapa {
-  nome: string;
-  prazo: string;
-  status: StatusEtapa;
-}
-
-interface EtapaModalProps {
-  etapa?: Etapa;
+type EtapaModalProps = {
+  etapa: Etapa;
   onClose: () => void;
 }
 
 const statusLabels: Record<StatusEtapa, string> = {
-  em_andamento: "Em andamento",
-  concluida: "Concluída",
-  pendente: "Pendente",
+  Andamento: "Em andamento",
+  Concluida: "Concluída",
+  Pendente: "Pendente",
 };
 
 // ── Icons ──────────────────────────────────────────────────────────────────────
@@ -33,12 +26,18 @@ function XIcon({ className }: { className?: string }) {
 // ── Componente ─────────────────────────────────────────────────────────────────
 
 export function EtapaModal({ etapa, onClose }: EtapaModalProps) {
-  const [funcionarios, setFuncionarios] = useState<Funcionario[]>([
-    { id: 1, nome: "Júlia Costa Silva", nivel: "Engenheiro", telefone: "(12) 99999-9999" },
-  ]);
-  const [status, setStatus] = useState<StatusEtapa>(etapa?.status ?? "pendente");
+  const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);
+  const [status, setStatus] = useState<StatusEtapa>(etapa?.status ?? "Pendente");
+  
+  useEffect(() => {
+    if (!etapa?.id) return;
 
-  const etapaData: Etapa = etapa ?? { nome: "Nome", prazo: "12/04/2026", status: "pendente" };
+    fetch(`http://localhost:3000/etapas/${etapa.id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setFuncionarios(data.funcionarios);
+      });
+  }, [etapa]);
 
   return (
     <div
@@ -54,18 +53,18 @@ export function EtapaModal({ etapa, onClose }: EtapaModalProps) {
 
         {/* Etapa info */}
         <div className="mb-5">
-          <h2 className="text-lg font-semibold text-slate-800">{etapaData.nome}</h2>
-          <p className="text-sm text-slate-500 mt-0.5">{etapaData.prazo}</p>
+          <h2 className="text-lg font-semibold text-slate-800">{etapa.nome}</h2>
+          <p className="text-sm text-slate-500 mt-0.5">{new Date(etapa.prazo).toLocaleDateString("pt-BR")}</p>
           <p className="text-sm font-semibold text-slate-700 mt-1">{statusLabels[status]}</p>
         </div>
 
         {/* Botão de status */}
         <button
-          onClick={() => status === "pendente" ? setStatus("em_andamento") : setStatus("concluida")}
-          disabled={status === "concluida"}
+          onClick={() => status === "Pendente" ? setStatus("Andamento") : setStatus("Concluida")}
+          disabled={status === "Concluida"}
           className="bg-[#4a7ba7] hover:bg-[#3d6b93] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium px-5 py-2 rounded-xl transition-colors shadow-sm mb-6 cursor-pointer"
         >
-          {status === "pendente" ? "Iniciar etapa" : status === "em_andamento" ? "Finalizar etapa" : "Concluída"}
+          {status === "Pendente" ? "Iniciar etapa" : status === "Andamento" ? "Finalizar etapa" : "Concluída"}
         </button>
 
         {/* Funcionários */}
@@ -74,7 +73,19 @@ export function EtapaModal({ etapa, onClose }: EtapaModalProps) {
             <div />
             <AdicionarFuncionarioDropdown
               funcionariosJaAdicionados={funcionarios.map((f) => f.id)}
-              onAdicionar={(f) => setFuncionarios((prev) => [...prev, f])}
+              onAdicionar={async (f) => {
+              await fetch(`http://localhost:3333/etapas/${etapa?.id}/funcionarios`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  funcionarioId: f.id,
+                }),
+              });
+
+              setFuncionarios((prev) => [...prev, f]);
+            }}
             />
           </div>
 
@@ -94,7 +105,7 @@ export function EtapaModal({ etapa, onClose }: EtapaModalProps) {
                   className={`grid grid-cols-3 px-4 py-3 items-center group hover:bg-slate-50 transition-colors ${idx < funcionarios.length - 1 ? "border-b border-slate-100" : ""}`}
                 >
                   <span className="text-sm text-slate-800">{f.nome}</span>
-                  <span className="text-sm text-slate-600">{f.nivel}</span>
+                  <span className="text-sm text-slate-600">{f.nivelPermissao}</span>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-slate-600">{f.telefone}</span>
                   </div>

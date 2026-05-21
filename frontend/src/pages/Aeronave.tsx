@@ -4,45 +4,8 @@ import EtapasTable from "../components/EtapasTable";
 import PecasTable from "../components/PecasTable";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import type { Aeronave, Peca } from "../types/index";
 
-type Peca = {
-  id: number;
-  nome: string;
-  tipo: string;
-  status: string;
-  fornecedor: string;
-};
-
-type Funcionario = {
-  id: number;
-  nome: string
-  telefone: string
-  endereco: string
-  usuario: string
-  senha: string
-  nivelPermissao: string;
-}
-
-type Etapa = {
-  id: number;
-  nome: string;
-  prazo: string;
-  status: string;
-
-  funcionarios: Funcionario[];
-};
-
-type Aeronave = {
-  id: number;
-  codigo: string;
-  modelo: string;
-  tipo: string;
-  capacidade: number;
-  alcance: number;
-
-  pecas: Peca[];
-  etapas: Etapa[];
-};
 
 export default function Aeronave() {
   const { id } = useParams();

@@ -1,24 +1,8 @@
 import { useState } from "react";
 import { EtapaModal } from "../modals/EtapaModal";
 import { CadEtapaModal } from "../modals/CadEtapaModal";
+import type { Etapa } from "../types";
 
-type Funcionario = {
-  id: number;
-  nome: string
-  telefone: string
-  endereco: string
-  usuario: string
-  senha: string
-  nivelPermissao: string;
-}
-
-type Etapa = {
-  id: number;
-  nome: string;
-  prazo: string;
-  status: string;
-  funcionarios: Funcionario[];
-}
 
 type Props = {
   etapas: Etapa[];
@@ -35,7 +19,7 @@ function StatusEtapaBadge({ status }: { status: string }) {
 }
 
 export default function EtapasTable({ etapas }: Props) {
-    const [open, setOpen] = useState(false);
+    const [etapaSelecionada, setEtapaSelecionada] = useState<Etapa | null>(null);
     const [openCadastro, setOpenCadastro] = useState(false);
     
     return (
@@ -70,19 +54,19 @@ export default function EtapasTable({ etapas }: Props) {
               }`}
             >
               <span className="text-sm text-slate-800">{etapa.nome}</span>
-              <span className="text-sm text-slate-600">{etapa.prazo}</span>
+              <span className="text-sm text-slate-600">{new Date(etapa.prazo).toLocaleDateString("pt-BR")}</span>
               <StatusEtapaBadge status={etapa.status} />
               <button 
-              onClick={() => setOpen(true)}
-              className="cursor-pointer justify-self-start border border-slate-300 hover:border-slate-400 hover:bg-slate-50 text-slate-700 text-xs font-medium px-4 py-1.5 rounded-lg transition-colors">
+                onClick={() => setEtapaSelecionada(etapa)}
+                className="cursor-pointer justify-self-start border border-slate-300 hover:border-slate-400 hover:bg-slate-50 text-slate-700 text-xs font-medium px-4 py-1.5 rounded-lg transition-colors">
                 Ver
               </button>
             </div>
           ))}
-          {open && (
+          {etapaSelecionada && (
             <EtapaModal
-              etapa={{ nome: "Nome", prazo: "12/04/2026", status: "pendente" }}
-              onClose={() => setOpen(false)}
+              etapa={etapaSelecionada}
+              onClose={() => setEtapaSelecionada(null)}
             />
           )}
 

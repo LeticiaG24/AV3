@@ -27,7 +27,7 @@ model Aeronave {
 model Etapa {
     id   Int    @id @default(autoincrement())
     nome String
-    prazo DateTime
+    prazo DateTime @db.Date
     status StatusEtapa
     aeronaveId Int
     aeronave Aeronave @relation(fields: [aeronaveId], references: [id])
