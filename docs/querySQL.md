@@ -24,9 +24,9 @@ VALUES
 
 INSERT INTO Etapa (nome, prazo, status, aeronaveId)
 VALUES
-('Montagem da fuselagem', '2026-06-01 10:00:00', 'Andamento', 1),
-('Instalação elétrica', '2026-06-10 15:00:00', 'Pendente', 1),
-('Teste estrutural', '2026-06-20 09:00:00', 'Concluida', 2);
+('Montagem da fuselagem', '2026-06-01', 'Andamento', 1),
+('Instalação elétrica', '2026-06-10', 'Pendente', 1),
+('Teste estrutural', '2026-06-20', 'Concluida', 2);
 
 -- =========================
 -- PEÇAS
