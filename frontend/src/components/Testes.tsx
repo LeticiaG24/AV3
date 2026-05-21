@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ResultadoTesteModal } from "../modals/ResultadoTesteModal";
 import { Check, X, Circle } from "lucide-react";
 
-import type { Teste, ResultadoTeste } from "../types";
+import type { Teste, ResultadoTeste, TipoTeste } from "../types";
 
 type Props = {
   testes: Teste[];
@@ -33,6 +33,18 @@ function TesteStatusIcon({ status }: { status: ResultadoTeste | null }) {
   return <CircleIcon className="w-5 h-5 text-slate-400" />;
 }
 
+function TesteTipo({ tipo }: { tipo: TipoTeste }) {
+  if (tipo === "Aerodinamico") {
+    return <span>Aerodinâmico</span>
+  }
+  if (tipo === "Eletrico") {
+    return <span>Elétrico</span>
+  }
+  if (tipo === "Hidraulico") {
+    return <span>Hidráulico</span>
+  }
+}
+
 export default function Testes({ testes, onStatusChange }: Props) {
   const [open, setOpen] = useState(false);
   const [testeSelecionado, setTesteSelecionado] = useState<Teste | null>(null);
@@ -55,7 +67,7 @@ export default function Testes({ testes, onStatusChange }: Props) {
             className="flex items-center justify-between"
           >
             <span className="text-sm text-slate-700">
-              {teste.tipo}
+              {TesteTipo(teste)}
             </span>
 
             <button

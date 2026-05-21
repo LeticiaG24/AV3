@@ -79,8 +79,8 @@ app.post("/aeronaves", async (req, res) => {
       codigo,
       modelo,
       tipo,
-      capacidade,
-      alcance,
+      capacidade: Number(capacidade),
+      alcance: Number(alcance),
       
       testes: {
         create: [
