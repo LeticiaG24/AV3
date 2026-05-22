@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-type Permissao = "admin" | "engenheiro" | "operador" | "";
+type Permissao = "Admin" | "Engenheiro" | "Operador" | "";
 
 interface FuncionarioForm {
   nome: string;
@@ -14,7 +14,7 @@ interface FuncionarioForm {
 interface CadastrarFuncionarioModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit?: (data: FuncionarioForm) => void;
+  onSubmit?: () => void;
 }
 
 export function CadFuncionarioModal({
@@ -33,6 +33,8 @@ export function CadFuncionarioModal({
 
   if (!isOpen) return null;
 
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -40,9 +42,37 @@ export function CadFuncionarioModal({
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
-    onSubmit?.(form);
-  };
+  async function handleSubmit() {
+    try {
+      setLoading(true);
+
+      const response = await fetch("http://localhost:3333/funcionarios", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nome: form.nome,
+          endereco: form.endereco,
+          usuario: form.usuario,
+          senha: form.senha,
+          telefone: form.telefone,
+          nivelPermissao: form.permissao,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Erro ao cadastrar aeronave");
+      }
+      await onSubmit?.();
+
+      // fecha modal
+      onClose();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     /* Overlay */
@@ -132,13 +162,13 @@ export function CadFuncionarioModal({
                 <option value="" disabled>
                   Permissão
                 </option>
-                <option value="admin" className="text-gray-700">
+                <option value="Admin" className="text-gray-700">
                   Admin
                 </option>
-                <option value="engenheiro" className="text-gray-700">
+                <option value="Engenheiro" className="text-gray-700">
                   Engenheiro
                 </option>
-                <option value="operador" className="text-gray-700">
+                <option value="Operador" className="text-gray-700">
                   Operador
                 </option>
               </select>
@@ -154,9 +184,10 @@ export function CadFuncionarioModal({
         <div className="mt-6 flex justify-center">
           <button
             onClick={handleSubmit}
+            disabled={loading}
             className="rounded-lg bg-[#3d5a80] px-10 py-2.5 text-sm font-medium text-white shadow-md transition hover:bg-[#2e4669] active:scale-95 cursor-pointer"
           >
-            Cadastrar
+            {loading ? "Cadastrando..." : "Cadastrar"}
           </button>
         </div>
       </div>
