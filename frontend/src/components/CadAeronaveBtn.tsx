@@ -2,7 +2,13 @@ import { useState } from "react";
 import { CadAeronaveModal } from "../modals/CadAeronaveModal";
 import { Plus } from "lucide-react";
 
-export default function CadAeronaveBtn() {
+interface CadAeronaveBtnProps {
+  atualizarAeronaves: () => Promise<void>;
+}
+
+export default function CadAeronaveBtn({
+  atualizarAeronaves,
+}: CadAeronaveBtnProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -19,6 +25,7 @@ export default function CadAeronaveBtn() {
         <CadAeronaveModal
           isOpen={open}
           onClose={() => setOpen(false)}
+          atualizarAeronaves={atualizarAeronaves}
         />
       )}
     </>

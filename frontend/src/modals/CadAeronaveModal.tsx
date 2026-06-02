@@ -10,17 +10,17 @@ interface AeronaveForm {
   tipo: Tipo;
 }
 
-interface CadastrarAeronaveModalProps {
+interface CadAeronaveModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit?: () => Promise<void>;
+  atualizarAeronaves: () => Promise<void>;
 }
 
 export function CadAeronaveModal({
   isOpen,
   onClose,
-  onSubmit,
-}: CadastrarAeronaveModalProps) {
+  atualizarAeronaves,
+}: CadAeronaveModalProps) {
   const [form, setForm] = useState<AeronaveForm>({
     modelo: "",
     codigo: "",
@@ -76,7 +76,7 @@ export function CadAeronaveModal({
       });
 
       // atualiza lista
-      await onSubmit?.();
+      await atualizarAeronaves();
 
       // fecha modal
       onClose();
@@ -160,7 +160,7 @@ export function CadAeronaveModal({
                 Comercial
               </option>
 
-              <option value="Cilitar" className="text-gray-700">
+              <option value="Militar" className="text-gray-700">
                 Militar
               </option>
             </select>
