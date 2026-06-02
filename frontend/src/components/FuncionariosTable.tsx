@@ -1,21 +1,14 @@
 import CadFuncionarioBtn from "./CadFuncionarioBtn";
-
-type Funcionario = {
-    id: number;
-    nome: string
-    telefone: string
-    endereco: string
-    usuario: string
-    senha: string
-    nivelPermissao: string;
-};
+import type { Funcionario } from "../types/index";
 
 type Props = {
   funcionarios?: Funcionario[];
+  atualizarFuncionarios: () => Promise<void>;
 };
 
 export default function FuncionariosTable({
   funcionarios = [],
+  atualizarFuncionarios,
 }: Props) {
   return (
     <section>
@@ -24,7 +17,9 @@ export default function FuncionariosTable({
           Funcionários
         </h2>
 
-        <CadFuncionarioBtn />
+        <CadFuncionarioBtn
+          atualizarFuncionarios={atualizarFuncionarios}
+        />
       </div>
 
       <div className="bg-[#1e3a5f] rounded-2xl overflow-hidden shadow-md overflow-x-auto">
@@ -40,7 +35,6 @@ export default function FuncionariosTable({
           ))}
         </div>
 
-        {/* Empty state */}
         {funcionarios.length === 0 ? (
           <div className="px-6 py-8 text-center text-slate-300">
             Nenhum funcionário encontrado.

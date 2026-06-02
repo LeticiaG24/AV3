@@ -13,6 +13,9 @@ cd frontend
 npm install
 npm run dev
 ```
+## Links
+- [Relatório de Desenvolvimento PDF](docs/relatorio_aerocode.pdf)
+- [Query MySQL](docs/querySQL.md)
 
 ## Rotas
 Login:

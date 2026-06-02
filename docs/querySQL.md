@@ -46,7 +46,13 @@ VALUES
 INSERT INTO Teste (tipo, resultado, aeronaveId)
 VALUES
 ('Eletrico', 'Aprovado', 1),
+('Hidraulico', 'Reprovado', 1),
+('Aerodinamico', 'Aprovado', 1);
+('Eletrico', 'Aprovado', 2),
 ('Hidraulico', 'Reprovado', 2),
+('Aerodinamico', 'Aprovado', 2);
+('Eletrico', 'Aprovado', 3),
+('Hidraulico', 'Reprovado', 3),
 ('Aerodinamico', 'Aprovado', 3);
 
 -- =========================
