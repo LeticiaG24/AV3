@@ -143,6 +143,22 @@ app.put("/pecas/:id", async (req, res) => {
   }
 });
 
+app.post("/pecas", async (req, res) => {
+  const { nome, tipo, status, fornecedor, aeronaveId } = req.body;
+
+  const peca = await prisma.peca.create({
+    data: {
+      nome,
+      tipo,
+      status,
+      fornecedor,
+      aeronaveId: Number(aeronaveId),
+    },
+  });
+
+  res.status(201).json(peca);
+});
+
 app.get("/testes", async (req, res) => {
   const testes = await prisma.teste.findMany();
   res.json(testes);

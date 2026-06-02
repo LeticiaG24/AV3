@@ -82,6 +82,7 @@ export default function Aeronave() {
         <PecasTable
           pecas={pecas}
           atualizarPecas={carregarAeronave}
+          aeronaveId={id!}  // id vem do useParams
         />
 
         <EtapasTable etapas={aeronave.etapas} />

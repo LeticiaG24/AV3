@@ -1,7 +1,8 @@
 import { useState } from "react";
 
-type TipoPeca = "nacional" | "importada" | "";
-type StatusPeca = "em_producao" | "em_transporte" | "pronta" | "";
+type TipoPeca = "Nacional" | "Importada" | "";
+type StatusPeca = "EmProducao" | "EmTransporte" | "Pronta" | "";
+
 
 interface PecaForm {
     nome: string;
@@ -13,34 +14,30 @@ interface PecaForm {
 interface CadastrarPecaModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit?: (data: PecaForm) => void;
+  aeronaveId: string | number;
+  onSuccess?: () => Promise<void>; // chama carregarAeronave após cadastro
 }
 
-export function CadPecaModal({
-  isOpen,
-  onClose,
-  onSubmit,
-}: CadastrarPecaModalProps) {
-  const [form, setForm] = useState<PecaForm>({
-    nome: "",
-    fornecedor: "",
-    tipo: "",
-    status: "",
-  });
+export function CadPecaModal({ isOpen, onClose, aeronaveId, onSuccess }: CadastrarPecaModalProps) {
+  const [form, setForm] = useState<PecaForm>({ nome: "", fornecedor: "", tipo: "", status: "" });
 
   if (!isOpen) return null;
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
-    onSubmit?.(form);
+  const handleSubmit = async () => {
+    await fetch("http://localhost:3333/pecas", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...form, aeronaveId }),
+    });
+    setForm({ nome: "", fornecedor: "", tipo: "", status: "" }); // limpa o form
+    onClose();
+    await onSuccess?.();
   };
-
   return (
     /* Overlay */
     <div
@@ -100,10 +97,10 @@ export function CadPecaModal({
                 <option value="" disabled>
                   Tipo
                 </option>
-                <option value="nacional" className="text-gray-700">
+                <option value="Nacional" className="text-gray-700">
                   Nacional
                 </option>
-                <option value="importada" className="text-gray-700">
+                <option value="Importada" className="text-gray-700">
                   Importada
                 </option>
               </select>
@@ -122,13 +119,13 @@ export function CadPecaModal({
                 <option value="" disabled>
                   Status
                 </option>
-                <option value="em_producao" className="text-gray-700">
+                <option value="EmProducao" className="text-gray-700">
                   Em produção
                 </option>
-                <option value="em_transporte" className="text-gray-700">
+                <option value="EmTransporte" className="text-gray-700">
                   Em transporte
                 </option>
-                <option value="pronta" className="text-gray-700">
+                <option value="Pronta" className="text-gray-700">
                     Pronta
                 </option>
               </select>

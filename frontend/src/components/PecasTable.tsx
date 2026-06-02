@@ -7,6 +7,7 @@ import type { Peca} from "../types/index";
 type Props = {
   pecas: Peca[];
   atualizarPecas: () => Promise<void>;
+  aeronaveId: string | number; // novo
 };
 function PecaCard({  peca,
   atualizarPecas,
@@ -57,6 +58,7 @@ function PecaCard({  peca,
 export default function PecasTable({
   pecas,
   atualizarPecas,
+  aeronaveId,
 }: Props) {
     const [open, setOpen] = useState(false);
 
@@ -72,6 +74,8 @@ export default function PecasTable({
               <CadPecaModal
                 isOpen={open}
                 onClose={() => setOpen(false)}
+                aeronaveId={aeronaveId}    // passa pra baixo
+                onSuccess={atualizarPecas} // atualiza a lista após cadastro
               />
             )}
           </div>

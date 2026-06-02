@@ -60,7 +60,7 @@ export function CadEtapaModal({
 
         {/* Título */}
         <h2 className="mb-6 text-center text-xl font-semibold tracking-tight text-gray-700">
-          Cadastrar Peça
+          Cadastrar Etapa
         </h2>
 
         {/* Campos */}
