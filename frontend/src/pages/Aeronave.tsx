@@ -6,6 +6,45 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import type { Aeronave, Peca } from "../types/index";
 
+function gerarRelatorio(aeronave: Aeronave, pecas: Peca[]) {
+  const linhas = [
+    `RELATÓRIO DE AERONAVE`,
+    `Gerado em: ${new Date().toLocaleString("pt-BR")}`,
+    ``,
+    `=== DADOS GERAIS ===`,
+    `Modelo:     ${aeronave.modelo}`,
+    `Código:     ${aeronave.codigo}`,
+    `Tipo:       ${aeronave.tipo}`,
+    `Capacidade: ${aeronave.capacidade}`,
+    `Alcance:    ${aeronave.alcance}`,
+    ``,
+    `=== PEÇAS (${pecas.length}) ===`,
+    ...pecas.map(
+      (p) => `- ${p.nome} | ${p.tipo} | Fornecedor: ${p.fornecedor} | Status: ${p.status}`
+    ),
+    ``,
+    `=== TESTES (${aeronave.testes.length}) ===`,
+    ...aeronave.testes.map(
+      (t) => `- ${t.tipo} | Status: ${t.resultado}`
+    ),
+    ``,
+    `=== ETAPAS (${aeronave.etapas.length}) ===`,
+    ...aeronave.etapas.map(
+      (e) => `- ${e.nome} | Status: ${e.status}`
+    ),
+  ];
+
+  const conteudo = linhas.join("\n");
+  const blob = new Blob([conteudo], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `relatorio_${aeronave.codigo}.txt`;
+  link.click();
+
+  URL.revokeObjectURL(url);
+}
 
 export default function Aeronave() {
   const { id } = useParams();
@@ -70,6 +109,7 @@ export default function Aeronave() {
               </p>
             </div>
             <button
+              onClick={() => gerarRelatorio(aeronave, pecas)}
               className="mt-4 w-full bg-[#4a7ba7] hover:bg-[#3d6b93] active:bg-[#2f5578] text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors duration-200 shadow-sm cursor-pointer"
             >
               Gerar relatório (.txt)
