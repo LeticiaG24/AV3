@@ -11,17 +11,17 @@ interface FuncionarioForm {
   permissao: Permissao;
 }
 
-interface CadastrarFuncionarioModalProps {
+interface CadFuncionarioModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit?: () => void;
+  atualizarFuncionarios: () => Promise<void>;
 }
 
 export function CadFuncionarioModal({
   isOpen,
   onClose,
-  onSubmit,
-}: CadastrarFuncionarioModalProps) {
+  atualizarFuncionarios: onSubmit,
+}: CadFuncionarioModalProps) {
   const [form, setForm] = useState<FuncionarioForm>({
     nome: "",
     endereco: "",
