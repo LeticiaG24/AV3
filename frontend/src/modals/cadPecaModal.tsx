@@ -28,15 +28,25 @@ export function CadPecaModal({ isOpen, onClose, aeronaveId, onSuccess }: Cadastr
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const [erro, setErro] = useState<string>("");
+
   const handleSubmit = async () => {
+    if (!form.nome || !form.fornecedor || !form.tipo || !form.status) {
+        setErro("Preencha todos os campos antes de cadastrar.");
+        return;
+      }
+    try {
     await fetch("http://localhost:3333/pecas", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...form, aeronaveId }),
     });
-    setForm({ nome: "", fornecedor: "", tipo: "", status: "" }); // limpa o form
+    setForm({ nome: "", fornecedor: "", tipo: "", status: "" });
     onClose();
     await onSuccess?.();
+    } catch (error) {
+      setErro("Erro de conexão com o servidor.");
+    }
   };
   return (
     /* Overlay */
@@ -138,6 +148,9 @@ export function CadPecaModal({ isOpen, onClose, aeronaveId, onSuccess }: Cadastr
         </div>
 
         {/* Botão Cadastrar */}
+        {erro && (
+          <p className="text-center text-xs text-red-500 mt-4">{erro}</p>
+        )}
         <div className="mt-6 flex justify-center">
           <button
             onClick={handleSubmit}

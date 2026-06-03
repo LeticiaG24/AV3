@@ -70,15 +70,14 @@ export function CadAeronaveModal({
         });
 
         if (!response.ok) {
-          const data = await response.json();
-          // Código duplicado — ajusta a string conforme o que seu backend retorna
-          if (response.status === 409 || data?.message?.includes("codigo")) {
-            setErro("Já existe uma aeronave com esse código.");
-          } else {
-            setErro("Erro ao cadastrar aeronave. Tente novamente.");
-          }
-          return;
+        const data = await response.json();
+        if (response.status === 409) {
+          setErro(data.message);
+        } else {
+          setErro("Erro ao cadastrar funcionario. Tente novamente.");
         }
+        return;
+      }
 
         setForm({ modelo: "", codigo: "", capacidade: "", alcance: "", tipo: "" });
         await atualizarAeronaves();
@@ -173,11 +172,10 @@ export function CadAeronaveModal({
             </span>
           </div>
         </div>
-
+        {erro && (
+          <p className="text-center text-xs text-red-500 mt-4">{erro}</p>
+        )}
         <div className="mt-6 flex justify-center">
-          {erro && (
-            <p className="text-center text-xs text-red-500 mt-4">{erro}</p>
-          )}
           <button
             onClick={handleSubmit}
             disabled={loading}

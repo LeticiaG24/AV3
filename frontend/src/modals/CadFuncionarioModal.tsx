@@ -42,9 +42,16 @@ export function CadFuncionarioModal({
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const [erro, setErro] = useState<string>("");
+
   async function handleSubmit() {
+    if (!form.endereco || !form.nome || !form.permissao || !form.senha || !form.telefone || !form.usuario) {
+        setErro("Preencha todos os campos antes de cadastrar.");
+        return;
+      }
     try {
       setLoading(true);
+      setErro("");
 
       const response = await fetch("http://localhost:3333/funcionarios", {
         method: "POST",
@@ -61,14 +68,19 @@ export function CadFuncionarioModal({
         }),
       });
       if (!response.ok) {
-        throw new Error("Erro ao cadastrar aeronave");
+        const data = await response.json();
+        if (response.status === 409) {
+          setErro(data.message);
+        } else {
+          setErro("Erro ao cadastrar funcionario. Tente novamente.");
+        }
+        return;
       }
       await onSubmit?.();
 
-      // fecha modal
       onClose();
     } catch (error) {
-      console.error(error);
+      setErro("Erro de conexão com o servidor.");
     } finally {
       setLoading(false);
     }
@@ -181,6 +193,9 @@ export function CadFuncionarioModal({
         </div>
 
         {/* Botão Cadastrar */}
+        {erro && (
+          <p className="text-center text-xs text-red-500 mt-4">{erro}</p>
+        )}
         <div className="mt-6 flex justify-center">
           <button
             onClick={handleSubmit}

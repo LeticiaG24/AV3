@@ -30,6 +30,12 @@ app.get("/funcionarios/:id", async (req, res) => {
 
 app.post("/funcionarios", async (req, res) => {
   const { nome, endereco, usuario, senha, telefone, nivelPermissao } = req.body;
+
+  const existente = await prisma.funcionario.findUnique({ where: { usuario } });
+  if (existente) {
+    return res.status(409).json({ message: "Já existe um funcionario com esse nome de usuário." });
+  }
+
   const funcionario = await prisma.funcionario.create({
     data: {
       nome,
@@ -73,7 +79,10 @@ app.get("/aeronaves/:id", async (req, res) => {
 
 app.post("/aeronaves", async (req, res) => {
   const { codigo, modelo, tipo, capacidade, alcance } = req.body;
-
+  const existente = await prisma.aeronave.findUnique({ where: { codigo } });
+  if (existente) {
+    return res.status(409).json({ message: "Já existe uma aeronave com esse código." });
+  }
   const aeronave = await prisma.aeronave.create({
     data: {
       codigo,

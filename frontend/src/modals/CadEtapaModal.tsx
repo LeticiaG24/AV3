@@ -25,15 +25,27 @@ export function CadEtapaModal({ isOpen, onClose, aeronaveId, onSuccess }: Cadast
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const [erro, setErro] = useState<string>("");
+
   const handleSubmit = async () => {
-    await fetch("http://localhost:3333/etapas", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...form, aeronaveId }),
-    });
-    setForm({ nome: "", prazo: "", status: "" });
-    onClose();
-    await onSuccess?.();
+    if (!form.nome || !form.prazo || !form.status) {
+        setErro("Preencha todos os campos antes de cadastrar.");
+        return;
+      }
+    try {
+      setErro("");
+      await fetch("http://localhost:3333/etapas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, aeronaveId }),
+      });
+      setForm({ nome: "", prazo: "", status: "" });
+      onClose();
+      await onSuccess?.();
+    } catch (error) {
+      console.error(error);
+      setErro("Erro de conexão com o servidor.");
+    }
   };
 
 
@@ -113,6 +125,9 @@ export function CadEtapaModal({ isOpen, onClose, aeronaveId, onSuccess }: Cadast
         </div>
 
         {/* Botão Cadastrar */}
+        {erro && (
+          <p className="text-center text-xs text-red-500 mt-4">{erro}</p>
+        )}
         <div className="mt-6 flex justify-center">
           <button
             onClick={handleSubmit}
