@@ -69,10 +69,11 @@ export default function EtapasTable({ etapas, aeronaveId, atualizarEtapas }: Pro
           {etapaSelecionada && (
             <EtapaModal
               etapa={etapaSelecionada}
+              todasEtapas={etapas}
               onClose={() => setEtapaSelecionada(null)}
+              onStatusChange={atualizarEtapas} // novo
             />
           )}
-
           {etapas.length === 0 && (
             <p className="text-sm text-slate-400 italic pt-4 text-center">Nenhuma etapa cadastrada.</p>
           )}

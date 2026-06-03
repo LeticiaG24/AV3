@@ -4,6 +4,8 @@ import type { Etapa, StatusEtapa, Funcionario } from "../types";
 
 type EtapaModalProps = {
   etapa: Etapa;
+  todasEtapas: Etapa[];
+  onStatusChange: () => Promise<void>;
   onClose: () => void;
 }
 
@@ -25,9 +27,16 @@ function XIcon({ className }: { className?: string }) {
 
 // ── Componente ─────────────────────────────────────────────────────────────────
 
-export function EtapaModal({ etapa, onClose }: EtapaModalProps) {
+export function EtapaModal({ etapa, todasEtapas, onClose, onStatusChange }: EtapaModalProps) {
   const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);
   const [status, setStatus] = useState<StatusEtapa>(etapa?.status ?? "Pendente");
+
+  function podeIniciar(): boolean {
+    return !todasEtapas.some(
+      (e) => new Date(e.prazo) < new Date(etapa.prazo) && e.status !== "Concluida"
+    );
+  }
+  const bloqueada = status === "Pendente" && !podeIniciar();
   
   useEffect(() => {
     if (!etapa?.id) return;
@@ -38,17 +47,7 @@ export function EtapaModal({ etapa, onClose }: EtapaModalProps) {
         setFuncionarios(data.funcionarios);
       });
   }, [etapa]);
-  useEffect(() => {
-    if (!etapa) return;
 
-    fetch(`http://localhost:3333/etapas/${etapa.id}/status`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ status }),
-    });
-  }, [status, etapa]);
 
   return (
     <div
@@ -72,35 +71,30 @@ export function EtapaModal({ etapa, onClose }: EtapaModalProps) {
         {/* Botão de status */}
         <button
           onClick={async () => {
-            let novoStatus: StatusEtapa;
-
-            if (status === "Pendente") {
-              novoStatus = "Andamento";
-            } else {
-              novoStatus = "Concluida";
-            }
+            const novoStatus: StatusEtapa = status === "Pendente" ? "Andamento" : "Concluida";
 
             await fetch(`http://localhost:3333/etapas/${etapa.id}/status`, {
               method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                status: novoStatus,
-              }),
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ status: novoStatus }),
             });
 
             setStatus(novoStatus);
+            await onStatusChange();
           }}
-          disabled={status === "Concluida"}
+          disabled={status === "Concluida" || bloqueada}
+          title={bloqueada ? "Finalize as etapas anteriores primeiro" : undefined}
           className="bg-[#4a7ba7] hover:bg-[#3d6b93] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium px-5 py-2 rounded-xl transition-colors shadow-sm mb-6 cursor-pointer"
         >
-          {status === "Pendente"
+          {bloqueada
+            ? "Etapa bloqueada"
+            : status === "Pendente"
             ? "Iniciar etapa"
             : status === "Andamento"
             ? "Finalizar etapa"
             : "Concluída"}
         </button>
+        
         {/* Funcionários */}
         <div>
           <div className="flex items-center justify-between mb-3">
