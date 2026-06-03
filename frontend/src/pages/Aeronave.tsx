@@ -125,7 +125,11 @@ export default function Aeronave() {
           aeronaveId={id!}  // id vem do useParams
         />
 
-        <EtapasTable etapas={aeronave.etapas} />
+        <EtapasTable
+          etapas={aeronave.etapas}
+          aeronaveId={id!}
+          atualizarEtapas={carregarAeronave}
+        />
       </main>
     </div>
   );

@@ -225,6 +225,21 @@ app.get("/etapas/:id", async (req, res) => {
   }
 });
 
+app.post("/etapas", async (req, res) => {
+  const { nome, prazo, status, aeronaveId } = req.body;
+
+  const etapa = await prisma.etapa.create({
+    data: {
+      nome,
+      prazo: new Date(prazo),
+      status,
+      aeronaveId: Number(aeronaveId),
+    },
+  });
+
+  res.status(201).json(etapa);
+});
+
 app.post("/etapas/:id/funcionarios", async (req, res) => {
   const etapaId = Number(req.params.id);
   const { funcionarioId } = req.body;

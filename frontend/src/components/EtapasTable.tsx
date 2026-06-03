@@ -6,6 +6,8 @@ import type { Etapa } from "../types";
 
 type Props = {
   etapas: Etapa[];
+  aeronaveId: string | number;
+  atualizarEtapas: () => Promise<void>;
 }
 
 function StatusEtapaBadge({ status }: { status: string }) {
@@ -18,7 +20,7 @@ function StatusEtapaBadge({ status }: { status: string }) {
   return <span className={`text-sm px-2 py-0.5 rounded-md font-medium ${className}`}>{label}</span>;
 }
 
-export default function EtapasTable({ etapas }: Props) {
+export default function EtapasTable({ etapas, aeronaveId, atualizarEtapas }: Props) {
     const [etapaSelecionada, setEtapaSelecionada] = useState<Etapa | null>(null);
     const [openCadastro, setOpenCadastro] = useState(false);
     
@@ -30,13 +32,14 @@ export default function EtapasTable({ etapas }: Props) {
         <button onClick={() => setOpenCadastro(true)} className="bg-[#1e3a5f] hover:bg-[#162d4a] text-white text-xs font-medium px-4 py-1.5 rounded-xl transition-colors cursor-pointer">
             Nova etapa
         </button>
-        {<CadEtapaModal isOpen={openCadastro} onClose={() => {}} />}
-        {openCadastro && (
-          <CadEtapaModal
-            isOpen={openCadastro}
-            onClose={() => setOpenCadastro(false)}
-          />
-        )}
+          {openCadastro && (
+            <CadEtapaModal
+              isOpen={openCadastro}
+              onClose={() => setOpenCadastro(false)}
+              aeronaveId={aeronaveId}
+              onSuccess={atualizarEtapas}
+            />
+          )}
         </div>
         <div className="grid grid-cols-4 pb-2 border-b border-slate-200">
             {["Nome", "Prazo", "Status", "Visualizar"].map((col) => (

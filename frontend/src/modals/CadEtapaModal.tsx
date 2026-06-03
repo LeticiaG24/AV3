@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-type Status = "pendente" | "andamento" | "concluida" | "";
+type Status = "Pendente" | "Andamento" | "Concluida" | "";
 
 interface EtapaForm {
     nome: string;
@@ -11,32 +11,31 @@ interface EtapaForm {
 interface CadastrarEtapaModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit?: (data: EtapaForm) => void;
+  aeronaveId: string | number;
+  onSuccess?: () => Promise<void>;
 }
 
-export function CadEtapaModal({
-  isOpen,
-  onClose,
-  onSubmit,
-}: CadastrarEtapaModalProps) {
-  const [form, setForm] = useState<EtapaForm>({
-    nome: "",
-    prazo: "",
-    status: "",
-  });
+export function CadEtapaModal({ isOpen, onClose, aeronaveId, onSuccess }: CadastrarEtapaModalProps) {
+  const [form, setForm] = useState<EtapaForm>({ nome: "", prazo: "", status: "" });
 
   if (!isOpen) return null;
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
-    onSubmit?.(form);
+  const handleSubmit = async () => {
+    await fetch("http://localhost:3333/etapas", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...form, aeronaveId }),
+    });
+    setForm({ nome: "", prazo: "", status: "" });
+    onClose();
+    await onSuccess?.();
   };
+
 
   return (
     /* Overlay */
@@ -77,12 +76,11 @@ export function CadEtapaModal({
 
           {/* Prazo */}
           <input
-            type="text"
+            type="date"
             name="prazo"
-            placeholder="Prazo"
             value={form.prazo}
             onChange={handleChange}
-            className="w-full rounded-lg border border-transparent bg-white px-4 py-2.5 text-sm text-gray-700 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-[#3d5a80] focus:ring-2 focus:ring-[#3d5a80]/20"
+            className="w-full rounded-lg border border-transparent bg-white px-4 py-2.5 text-sm text-gray-700 shadow-sm outline-none transition focus:border-[#3d5a80] focus:ring-2 focus:ring-[#3d5a80]/20"
           />
 
           {/* Tipo + Status */}
@@ -97,13 +95,13 @@ export function CadEtapaModal({
                 <option value="" disabled>
                   Status
                 </option>
-                <option value="pendente" className="text-gray-700">
+                <option value="Pendente" className="text-gray-700">
                   Pendente
                 </option>
-                <option value="andamento" className="text-gray-700">
+                <option value="Andamento" className="text-gray-700">
                   Em andamento
                 </option>
-                <option value="concluida" className="text-gray-700">
+                <option value="Concluida" className="text-gray-700">
                     Concluída
                 </option>
               </select>
