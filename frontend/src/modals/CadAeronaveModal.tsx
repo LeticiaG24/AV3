@@ -44,48 +44,51 @@ export function CadAeronaveModal({
     }));
   };
 
-  async function handleSubmit() {
-    try {
-      setLoading(true);
+  const [erro, setErro] = useState<string>("");
 
-      const response = await fetch("http://localhost:3333/aeronaves", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          modelo: form.modelo,
-          codigo: form.codigo,
-          capacidade: Number(form.capacidade),
-          alcance: Number(form.alcance),
-          tipo: form.tipo,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Erro ao cadastrar aeronave");
+    async function handleSubmit() {
+      // Validação local
+      if (!form.modelo || !form.codigo || !form.capacidade || !form.alcance || !form.tipo) {
+        setErro("Preencha todos os campos antes de cadastrar.");
+        return;
       }
 
-      // limpa formulário
-      setForm({
-        modelo: "",
-        codigo: "",
-        capacidade: "",
-        alcance: "",
-        tipo: "",
-      });
+      try {
+        setLoading(true);
+        setErro("");
 
-      // atualiza lista
-      await atualizarAeronaves();
+        const response = await fetch("http://localhost:3333/aeronaves", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            modelo: form.modelo,
+            codigo: form.codigo,
+            capacidade: Number(form.capacidade),
+            alcance: Number(form.alcance),
+            tipo: form.tipo,
+          }),
+        });
 
-      // fecha modal
-      onClose();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+        if (!response.ok) {
+          const data = await response.json();
+          // Código duplicado — ajusta a string conforme o que seu backend retorna
+          if (response.status === 409 || data?.message?.includes("codigo")) {
+            setErro("Já existe uma aeronave com esse código.");
+          } else {
+            setErro("Erro ao cadastrar aeronave. Tente novamente.");
+          }
+          return;
+        }
+
+        setForm({ modelo: "", codigo: "", capacidade: "", alcance: "", tipo: "" });
+        await atualizarAeronaves();
+        onClose();
+      } catch (error) {
+        setErro("Erro de conexão com o servidor.");
+      } finally {
+        setLoading(false);
+      }
     }
-  }
 
   return (
     <div
@@ -172,6 +175,9 @@ export function CadAeronaveModal({
         </div>
 
         <div className="mt-6 flex justify-center">
+          {erro && (
+            <p className="text-center text-xs text-red-500 mt-4">{erro}</p>
+          )}
           <button
             onClick={handleSubmit}
             disabled={loading}
