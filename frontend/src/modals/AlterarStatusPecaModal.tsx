@@ -76,6 +76,15 @@ export function AlterarStatusPecaModal({
     onConfirm?.(selecionado);
     onClose();
   };
+  
+  const ORDEM: Record<string, number> = {
+    EmProducao: 0,
+    EmTransporte: 1,
+    Pronta: 2,
+  };
+  const opcoesFiltradas = STATUS_OPTIONS.filter(
+    (option) => ORDEM[option.value] >= ORDEM[peca.status]
+  );
 
   return (
     <div
@@ -102,7 +111,7 @@ export function AlterarStatusPecaModal({
         </p>
 
         <div className="flex flex-col gap-2.5">
-          {STATUS_OPTIONS.map((option) => {
+          {opcoesFiltradas.map((option) => {
             const isSelected = selecionado === option.value;
 
             return (
