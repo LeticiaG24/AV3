@@ -12,11 +12,9 @@ app.use(cors());
 app.use(express.json());
 
 async function criarAdminInicial() {
-  const existe = await prisma.funcionario.findFirst({
-    where: { usuario: "admin" },
-  });
+  const total = await prisma.funcionario.count();
 
-  if (existe) return;
+  if (total > 0) return;
 
   const senhaHash = await bcrypt.hash("admin123", 10);
 
@@ -33,6 +31,33 @@ async function criarAdminInicial() {
 
   console.log("✅ Usuário admin criado.");
 }
+
+app.get("/auth/primeiro-login", async (req, res) => {
+  const total = await prisma.funcionario.count();
+  res.json({ primeiroLogin: total === 1 });
+});
+
+app.put("/funcionarios/me", async (req, res) => {
+  const { nome, telefone, endereco, usuario, senha } = req.body;
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) return res.status(401).json({ error: "Não autorizado." });
+
+  try {
+    const payload = jwt.verify(token, JWT_SECRET) as { id: number };
+    const senhaHash = await bcrypt.hash(senha, 10);
+
+    const funcionario = await prisma.funcionario.update({
+      where: { id: payload.id },
+      data: { nome, telefone, endereco, usuario, senha: senhaHash },
+    });
+
+    res.json(funcionario);
+  } catch {
+    res.status(401).json({ error: "Token inválido." });
+  }
+});
+
 
 app.listen(3333, async () => {
   await criarAdminInicial();
