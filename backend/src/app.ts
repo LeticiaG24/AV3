@@ -1,11 +1,72 @@
 import express from "express";
 import cors from "cors";
 import { prisma } from "./lib/prisma";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+
+const JWT_SECRET = process.env.JWT_SECRET || "aerocode-secret";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+async function criarAdminInicial() {
+  const existe = await prisma.funcionario.findFirst({
+    where: { usuario: "admin" },
+  });
+
+  if (existe) return;
+
+  const senhaHash = await bcrypt.hash("admin123", 10);
+
+  await prisma.funcionario.create({
+    data: {
+      nome: "Administrador",
+      telefone: "(12) 99999-9999",
+      endereco: "usuario inicial",
+      usuario: "admin",
+      senha: senhaHash,
+      nivelPermissao: "Admin",
+    },
+  });
+
+  console.log("✅ Usuário admin criado.");
+}
+
+app.listen(3333, async () => {
+  await criarAdminInicial();
+  console.log("Servidor rodando na porta http://localhost:3333");
+});
+
+app.post("/auth/login", async (req, res) => {
+  const { usuario, senha } = req.body;
+
+  try {
+    const funcionario = await prisma.funcionario.findFirst({
+      where: { usuario },
+    });
+
+    if (!funcionario) {
+      return res.status(401).json({ error: "Usuário ou senha inválidos." });
+    }
+
+    const senhaValida = await bcrypt.compare(senha, funcionario.senha);
+    if (!senhaValida) {
+      return res.status(401).json({ error: "Usuário ou senha inválidos." });
+    }
+
+    const token = jwt.sign(
+      { id: funcionario.id, nivel: funcionario.nivelPermissao, nome: funcionario.nome },
+      JWT_SECRET,
+      { expiresIn: "8h" }
+    );
+
+    res.json({ token, nivel: funcionario.nivelPermissao });
+  } catch (error) {
+    res.status(500).json({ error: "Erro interno." });
+  }
+});
 
 app.get("/funcionarios", async (req, res) => {
   const funcionarios = await prisma.funcionario.findMany();
@@ -36,12 +97,14 @@ app.post("/funcionarios", async (req, res) => {
     return res.status(409).json({ message: "Já existe um funcionario com esse nome de usuário." });
   }
 
+  const senhaHash = await bcrypt.hash(senha, 10);
+
   const funcionario = await prisma.funcionario.create({
     data: {
       nome,
       endereco,
       usuario,
-      senha,
+      senha: senhaHash,
       telefone,
       nivelPermissao,
     }
@@ -282,8 +345,4 @@ app.put("/etapas/:id/status", async (req, res) => {
   });
 
   res.json(etapa);
-});
-
-app.listen(3333, () => {
-  console.log("Servidor rodando na porta http://localhost:3333");
 });

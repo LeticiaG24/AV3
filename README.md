@@ -15,18 +15,11 @@ cd frontend
 npm install
 npm run dev
 ```
+Primeiro acesso faça login com:
+```
+usuário: admin
+senha: admin123
+```
 ## Links
-- [Relatório de Desenvolvimento PDF](docs/relatorio_aerocode.pdf)
-- [Query MySQL](docs/querySQL.md)
-
-## Rotas
-Login:
-http://localhost:5173/
-
-Usuários:
-- Administrador - http://localhost:5173/admin
-- Engenheiro - http://localhost:5173/engenheiro
-- Operador - http://localhost:5173/operador
-
-Detalhes de uma aeronave:
-http://localhost:5173/aeronave
+- [Relatório de Desenvolvimento Frontend](docs/relatorio_aerocode.pdf)
+- [Relatório Backend]()
