@@ -11,6 +11,35 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use((req, res, next) => {
+  const inicio = process.hrtime.bigint();
+
+  res.on("finish", () => {
+    const duracao =
+      Number(process.hrtime.bigint() - inicio) / 1_000_000;
+
+    console.log(
+      `METRICA | ${req.method} | ${req.path} | ${duracao.toFixed(2)}ms`
+    );
+  });
+
+  const originalJson = res.json;
+
+  res.json = function (body) {
+    const duracao =
+      Number(process.hrtime.bigint() - inicio) / 1_000_000;
+
+    res.setHeader(
+      "X-Processing-Time",
+      duracao.toFixed(2)
+    );
+
+    return originalJson.call(this, body);
+  };
+
+  next();
+});
+
 async function criarAdminInicial() {
   const total = await prisma.funcionario.count();
 

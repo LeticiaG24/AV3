@@ -88,10 +88,42 @@ Senha: admin123
 ### Relatórios
 
 * 📄 [Relatório de Desenvolvimento Frontend](docs/relatorio_aerocode.pdf)
-* 📄 Relatório Backend *(em desenvolvimento)*
+* 📄 [Relatório de Qualidade Backend](docs/Relatorio_Qualidade_Aerocode.pdf)
 
 ---
+## 📊 Script de Teste de Qualidade
 
+O script responsável pela avaliação de desempenho do sistema está localizado em:
+
+```text
+backend/src/simular_carga.js
+```
+
+Esse script realiza testes de carga simulando **1, 5 e 10 usuários simultâneos**, coletando métricas de:
+
+* **Latência** — tempo necessário para iniciar o processamento da requisição;
+* **Tempo de processamento** — duração do processamento interno da operação;
+* **Tempo de resposta** — tempo total entre o envio da requisição e o recebimento da resposta.
+
+### Execução dos Testes
+
+Primeiramente, inicie o servidor backend:
+
+```bash
+cd backend
+npm run dev
+```
+
+Em seguida, abra um novo terminal e execute o script de teste:
+
+```bash
+cd backend
+node src/simular_carga.js
+```
+
+Ao término da execução, serão exibidas no terminal as métricas coletadas para cada cenário de carga, permitindo a análise do comportamento e da escalabilidade do sistema.
+
+---
 ## 📌 Observações
 
 * Certifique-se de que o backend esteja em execução antes de iniciar o frontend.
